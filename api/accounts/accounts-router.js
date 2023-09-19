@@ -12,23 +12,28 @@ const {
   deleteById,} 
   = require('./accounts-model');
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-      res.json('get all accounts')
+    const accounts = await getAll()
+      res.json(accounts)
   } catch (err) {
     next(err)
   }
 })
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', 
+checkAccountId, async (req, res, next) => {
   try {
-    res.json('get account by id')
+    const account = await getById(req.params.id)
+    res.json(account)
   } catch (err) {
     next(err)
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', 
+checkAccountNameUnique, 
+checkAccountPayload, (req, res, next) => {
   try {
     res.json('post new account')
   } catch (err) {
@@ -36,7 +41,10 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', 
+checkAccountId, 
+checkAccountNameUnique, 
+checkAccountPayload, (req, res, next) => {
   try {
     res.json('update account')
   } catch (err) {
@@ -44,7 +52,8 @@ router.put('/:id', (req, res, next) => {
   }
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', 
+checkAccountId, (req, res, next) => {
   try {
     res.json('delete account')
   } catch (err) {
